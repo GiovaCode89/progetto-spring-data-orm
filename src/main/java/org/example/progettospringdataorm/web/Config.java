@@ -1,16 +1,13 @@
 
 package org.example.progettospringdataorm.web;
 
-/*
-import org.example.progettospringdata.db.dao.CategoriaDao;
-import org.example.progettospringdata.db.dao.ClienteDao;
-import org.example.progettospringdata.db.dao.ProdottoDao;
-import org.example.progettospringdata.db.dao.impl.CategoriaDaoImpl;
-import org.example.progettospringdata.db.dao.impl.ClienteDaoImpl;
-import org.example.progettospringdata.db.dao.impl.ProdottoDaoImpl;
 
- */
 
+
+import org.example.progettospringdataorm.db.dao.impl.ClienteDaoImpl;
+import org.example.progettospringdataorm.db.dao.inteface.ClienteDao;
+import org.example.progettospringdataorm.db.dao.inteface.GeneralDao;
+import org.example.progettospringdataorm.db.entity.Cliente;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +21,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
-
 import javax.sql.DataSource;
 
 //@EnableTransactionManagement = notazione che permette al nostro programma di compiere le transazioni
@@ -59,8 +55,9 @@ public class Config {
     @Bean
     public DataSource getDbConnection(){
         DriverManagerDataSource ds= new DriverManagerDataSource();
+
         ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        ds.setUrl("jdbc:mysql://localhost:3306/mio_spring_db?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
+        ds.setUrl("jdbc:mysql://localhost:3306/mio_spring_db_orm?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
         ds.setUsername("root");
         ds.setPassword("beta1710");
         return ds;
@@ -70,11 +67,14 @@ public class Config {
     public LocalContainerEntityManagerFactoryBean getEntityManager(){
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
         adapter.setDatabase(Database.MYSQL);
+        //permette di aggiornare la struttura delle tabelle del db in base all'implementazioni delle classi entity
+        adapter.setGenerateDdl(true);
 
         LocalContainerEntityManagerFactoryBean factory= new LocalContainerEntityManagerFactoryBean();
         factory.setDataSource(getDbConnection());
         factory.setJpaVendorAdapter(adapter);
-        factory.setPackagesToScan("org.example.progettospringdataorm.db");
+        //Specifico il package dove sono contenute le classi Entity
+        factory.setPackagesToScan("org.example.progettospringdataorm.db.entity");
         return factory;
 
     }
@@ -88,22 +88,16 @@ public class Config {
     }
 
 
-/*
+
     @Bean
     public ClienteDao getClienteService(){
-        return new ClienteDaoImpl(getDbConnection());
+        return new ClienteDaoImpl();
     }
 
     @Bean
-    public ProdottoDao getProdottoService(){
-        return new ProdottoDaoImpl(getDbConnection());
+    public GeneralDao<Cliente> getGeneralDaoCliente(){
+        return new ClienteDaoImpl();
     }
-
-    @Bean
-    public CategoriaDao getCategoriaService(){
-        return new CategoriaDaoImpl(getDbConnection());
-    }
-*/
 
 }
 

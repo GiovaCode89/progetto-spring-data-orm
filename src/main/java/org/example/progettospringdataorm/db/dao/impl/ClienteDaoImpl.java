@@ -1,5 +1,6 @@
 package org.example.progettospringdataorm.db.dao.impl;
 
+import org.example.progettospringdataorm.db.dao.inteface.ClienteDao;
 import org.example.progettospringdataorm.db.dao.inteface.GeneralDao;
 import org.example.progettospringdataorm.db.entity.Cliente;
 
@@ -9,7 +10,9 @@ import javax.persistence.PersistenceContextType;
 import javax.transaction.Transactional;
 import java.util.List;
 
-public class ClienteDaoImpl implements GeneralDao<Cliente> {
+
+//Questa classe per i comandi di insert, delete e update è impostata in modo tale che fà uso delle transazioni
+public class ClienteDaoImpl implements GeneralDao<Cliente>, ClienteDao {
     @PersistenceContext()
     private EntityManager manager;
 
@@ -20,9 +23,10 @@ public class ClienteDaoImpl implements GeneralDao<Cliente> {
         manager.persist(c);
     }
 
+    @Transactional
     @Override
-    public void update(Cliente object) {
-
+    public void update(Cliente c) {
+        manager.merge(c);
     }
 
     @Override
@@ -37,6 +41,11 @@ public class ClienteDaoImpl implements GeneralDao<Cliente> {
 
     @Override
     public List<Cliente> retrieveAll() {
+        return null;
+    }
+
+    @Override
+    public String getTelefonoByNomeAndCognome(String nome, String cognome) {
         return null;
     }
 }

@@ -9,7 +9,7 @@ public class Prodotto {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int id;
     private String nome;
-    private Categoria categoria;
+    private String categoria;
     private String descrizione;
 
     @Column(name="prezzo_unitario")
@@ -21,7 +21,7 @@ public class Prodotto {
     public Prodotto() {
     }
 
-    public Prodotto(int id, String nome, Categoria categoria, String descrizione, int prezzoUnitario, String unitaDiMisura) {
+    public Prodotto(int id, String nome, String categoria, String descrizione, int prezzoUnitario, String unitaDiMisura) {
         this.id = id;
         this.nome = nome;
         this.categoria = categoria;
@@ -51,11 +51,11 @@ public class Prodotto {
         this.nome = nome;
     }
 
-    public Categoria getCategoria() {
+    public String getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(Categoria categoria) {
+    public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
 

@@ -1,6 +1,7 @@
 package org.example.progettospringdataorm.controller;
 
 
+import org.example.progettospringdataorm.db.dao.inteface.ClienteDao;
 import org.example.progettospringdataorm.db.dao.inteface.GeneralDao;
 import org.example.progettospringdataorm.db.entity.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ public class ClienteController {
     @Autowired
     private GeneralDao<Cliente> generalDao;
 
+
     @GetMapping("/selectById")
     @ResponseBody
     public String primoMetodo(@RequestParam("id") int id){
@@ -26,6 +28,16 @@ public class ClienteController {
     @GetMapping("/insertRowWithName&Sur")
     public String secondoMetodo(@RequestParam("name") String nome, @RequestParam("surname") String cognome){
         generalDao.add(new Cliente(nome,cognome));
+        return "welcome";
+    }
+
+    @GetMapping("/updateForId")
+    public String quartoMetodo(@RequestParam("id") int id){
+        Cliente c=generalDao.selectById(id);
+        c.setNome("Carlo");
+        c.setCognome("Bianchi");
+        //aggiorna un riga con uno specifico id
+        generalDao.update(c);
         return "welcome";
     }
 

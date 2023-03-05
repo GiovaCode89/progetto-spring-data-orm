@@ -3,19 +3,26 @@ package org.example.progettospringdataorm.db.entity;
 import javax.persistence.*;
 
 @Entity
+@Table(name="cliente")
 public class Cliente {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int id;
+    @Column
     private String nome;
+    @Column
     private String cognome;
 
     @Column(name="codice_fiscale")
     private String codiceFiscale;
+    @Column
     private String email;
+    @Column
     private String telefono;
+    @Column
     private String username;
+    @Column
     private String password;
 
     public Cliente() {
