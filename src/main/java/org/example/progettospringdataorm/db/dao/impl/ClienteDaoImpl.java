@@ -1,12 +1,11 @@
 package org.example.progettospringdataorm.db.dao.impl;
 
-import org.example.progettospringdataorm.db.dao.inteface.ClienteDao;
-import org.example.progettospringdataorm.db.dao.inteface.GeneralDao;
+import org.example.progettospringdataorm.db.dao.inteface.simple.ClienteDao;
+import org.example.progettospringdataorm.db.dao.inteface.simple.GeneralDao;
 import org.example.progettospringdataorm.db.entity.Cliente;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -30,8 +29,10 @@ public class ClienteDaoImpl implements GeneralDao<Cliente>, ClienteDao {
     }
 
     @Override
-    public void deleteForId(int id) {
-
+    @Transactional
+    public void deleteById(int id) {
+        Cliente c= selectById(id);
+        manager.remove(c);
     }
 
     @Override

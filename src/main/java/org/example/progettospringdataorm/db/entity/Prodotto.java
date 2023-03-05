@@ -4,6 +4,7 @@ package org.example.progettospringdataorm.db.entity;
 import javax.persistence.*;
 
 @Entity
+@Table(name="prodotto")
 public class Prodotto {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

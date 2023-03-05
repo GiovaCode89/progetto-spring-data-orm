@@ -1,8 +1,7 @@
 package org.example.progettospringdataorm.controller;
 
 
-import org.example.progettospringdataorm.db.dao.inteface.ClienteDao;
-import org.example.progettospringdataorm.db.dao.inteface.GeneralDao;
+import org.example.progettospringdataorm.db.dao.inteface.simple.GeneralDao;
 import org.example.progettospringdataorm.db.entity.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,6 +37,12 @@ public class ClienteController {
         c.setCognome("Bianchi");
         //aggiorna un riga con uno specifico id
         generalDao.update(c);
+        return "welcome";
+    }
+
+    @GetMapping("/deleteById")
+    public String quintoMetodo(@RequestParam("id") int id){
+        generalDao.deleteById(id);
         return "welcome";
     }
 

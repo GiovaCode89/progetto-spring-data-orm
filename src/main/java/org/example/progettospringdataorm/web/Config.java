@@ -5,12 +5,13 @@ package org.example.progettospringdataorm.web;
 
 
 import org.example.progettospringdataorm.db.dao.impl.ClienteDaoImpl;
-import org.example.progettospringdataorm.db.dao.inteface.ClienteDao;
-import org.example.progettospringdataorm.db.dao.inteface.GeneralDao;
+import org.example.progettospringdataorm.db.dao.inteface.simple.ClienteDao;
+import org.example.progettospringdataorm.db.dao.inteface.simple.GeneralDao;
 import org.example.progettospringdataorm.db.entity.Cliente;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -24,11 +25,18 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 import javax.sql.DataSource;
 
 //@EnableTransactionManagement = notazione che permette al nostro programma di compiere le transazioni
+//@EnableJpaRepositories = abilita l'applicazione ad utilizzare spring data repository
+    //basepackage= permette di indicare il package che contiene le interfacce che estendono CrudRepository
+    //entityManagerFactoryRef= indica il bean che istanzia l'EntityManagerFactory (obbligatorio per Spring Data Repository)
+    //transactionManagerRef= indica il bean che istanzia il TransactionManager (obbligatorio per Spring Data Repository)
 
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "org.example.progettospringdataorm.controller")
 @EnableTransactionManagement
+@EnableJpaRepositories(basePackages = "org.example.progettospringdataorm.db.dao.inteface.repository",
+                        entityManagerFactoryRef="eMF",
+                        transactionManagerRef = "tM")
 public class Config {
 
     //Creo il FreeMarkerViewResolver
@@ -63,7 +71,7 @@ public class Config {
         return ds;
     }
 
-    @Bean
+    @Bean(name="eMF")
     public LocalContainerEntityManagerFactoryBean getEntityManager(){
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
         adapter.setDatabase(Database.MYSQL);
@@ -81,7 +89,7 @@ public class Config {
 
 
     //Restituisce un oggetto che permette di compiere le transazioni
-    @Bean
+    @Bean(name="tM")
     public PlatformTransactionManager getTransactionManager(){
         JpaTransactionManager jtm= new JpaTransactionManager(getEntityManager().getObject());
         return jtm;

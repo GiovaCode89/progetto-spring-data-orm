@@ -1,11 +1,9 @@
 package org.example.progettospringdataorm.db.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name="categoria")
 public class Categoria {
 
     @Id
@@ -29,6 +27,11 @@ public class Categoria {
         this.nome = nome;
         this.descrizione = descrizione;
         this.id_categoria_padre = id_categoria_padre;
+    }
+
+    public Categoria(String nome, String descrizione) {
+        this.nome = nome;
+        this.descrizione = descrizione;
     }
 
     public int getId() {
