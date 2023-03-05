@@ -15,18 +15,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
 import javax.sql.DataSource;
 
+//@EnableTransactionManagement = notazione che permette al nostro programma di compiere le transazioni
+
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "org.example.progettospringdata.controller")
+@ComponentScan(basePackages = "org.example.progettospringdataorm.controller")
+@EnableTransactionManagement
 public class Config {
 
     //Creo il FreeMarkerViewResolver
@@ -71,6 +77,14 @@ public class Config {
         factory.setPackagesToScan("org.example.progettospringdataorm.db");
         return factory;
 
+    }
+
+
+    //Restituisce un oggetto che permette di compiere le transazioni
+    @Bean
+    public PlatformTransactionManager getTransactionManager(){
+        JpaTransactionManager jtm= new JpaTransactionManager(getEntityManager().getObject());
+        return jtm;
     }
 
 
