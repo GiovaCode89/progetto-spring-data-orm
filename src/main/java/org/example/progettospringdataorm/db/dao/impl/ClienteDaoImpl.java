@@ -2,6 +2,7 @@ package org.example.progettospringdataorm.db.dao.impl;
 
 import org.example.progettospringdataorm.db.dao.inteface.simple.ClienteDao;
 import org.example.progettospringdataorm.db.dao.inteface.simple.GeneralDao;
+import org.example.progettospringdataorm.db.entity.Categoria;
 import org.example.progettospringdataorm.db.entity.Cliente;
 
 import javax.persistence.EntityManager;
@@ -42,7 +43,9 @@ public class ClienteDaoImpl implements GeneralDao<Cliente>, ClienteDao {
 
     @Override
     public List<Cliente> retrieveAll() {
-        return null;
+
+        List<Cliente> clienti = manager.createQuery("select x from Cliente x", Cliente.class).getResultList();
+        return clienti;
     }
 
     @Override

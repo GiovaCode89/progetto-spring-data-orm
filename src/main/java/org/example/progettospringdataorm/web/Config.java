@@ -2,12 +2,16 @@
 package org.example.progettospringdataorm.web;
 
 
-
-
+import org.example.progettospringdataorm.db.dao.impl.CategoriaDaoImpl;
 import org.example.progettospringdataorm.db.dao.impl.ClienteDaoImpl;
+import org.example.progettospringdataorm.db.dao.impl.ProdottoDaoImpl;
+import org.example.progettospringdataorm.db.dao.inteface.simple.CategoriaDao;
 import org.example.progettospringdataorm.db.dao.inteface.simple.ClienteDao;
 import org.example.progettospringdataorm.db.dao.inteface.simple.GeneralDao;
+import org.example.progettospringdataorm.db.dao.inteface.simple.ProdottoDao;
+import org.example.progettospringdataorm.db.entity.Categoria;
 import org.example.progettospringdataorm.db.entity.Cliente;
+import org.example.progettospringdataorm.db.entity.Prodotto;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -22,27 +26,28 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
+
 import javax.sql.DataSource;
 
 //@EnableTransactionManagement = notazione che permette al nostro programma di compiere le transazioni
 //@EnableJpaRepositories = abilita l'applicazione ad utilizzare spring data repository
-    //basepackage= permette di indicare il package che contiene le interfacce che estendono CrudRepository
-    //entityManagerFactoryRef= indica il bean che istanzia l'EntityManagerFactory (obbligatorio per Spring Data Repository)
-    //transactionManagerRef= indica il bean che istanzia il TransactionManager (obbligatorio per Spring Data Repository)
+//basepackage= permette di indicare il package che contiene le interfacce che estendono CrudRepository
+//entityManagerFactoryRef= indica il bean che istanzia l'EntityManagerFactory (obbligatorio per Spring Data Repository)
+//transactionManagerRef= indica il bean che istanzia il TransactionManager (obbligatorio per Spring Data Repository)
 
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "org.example.progettospringdataorm.controller")
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "org.example.progettospringdataorm.db.dao.inteface.repository",
-                        entityManagerFactoryRef="eMF",
-                        transactionManagerRef = "tM")
+        entityManagerFactoryRef = "eMF",
+        transactionManagerRef = "tM")
 public class Config {
 
     //Creo il FreeMarkerViewResolver
     @Bean
-    public FreeMarkerViewResolver createResolver(){
-        FreeMarkerViewResolver resolver= new FreeMarkerViewResolver();
+    public FreeMarkerViewResolver createResolver() {
+        FreeMarkerViewResolver resolver = new FreeMarkerViewResolver();
         resolver.setPrefix("");
         //setSuffix("...") indica il formato dei file da prendere nella cartella delle view
         resolver.setSuffix(".ftl");
@@ -52,8 +57,8 @@ public class Config {
 
     //Creo il FreeMarkerConfigurer
     @Bean
-    public FreeMarkerConfigurer configureFreeMarker(){
-        FreeMarkerConfigurer config= new FreeMarkerConfigurer();
+    public FreeMarkerConfigurer configureFreeMarker() {
+        FreeMarkerConfigurer config = new FreeMarkerConfigurer();
         //'setTemplateLoaderPath("...")' indica la path dove vi sono le view
         config.setTemplateLoaderPath("/WEB-INF/view/");
         return config;
@@ -61,8 +66,8 @@ public class Config {
 
     //creo connessione al db
     @Bean
-    public DataSource getDbConnection(){
-        DriverManagerDataSource ds= new DriverManagerDataSource();
+    public DataSource getDbConnection() {
+        DriverManagerDataSource ds = new DriverManagerDataSource();
 
         ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
         ds.setUrl("jdbc:mysql://localhost:3306/mio_spring_db_orm?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
@@ -71,14 +76,14 @@ public class Config {
         return ds;
     }
 
-    @Bean(name="eMF")
-    public LocalContainerEntityManagerFactoryBean getEntityManager(){
+    @Bean(name = "eMF")
+    public LocalContainerEntityManagerFactoryBean getEntityManager() {
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
         adapter.setDatabase(Database.MYSQL);
         //permette di aggiornare la struttura delle tabelle del db in base all'implementazioni delle classi entity
         adapter.setGenerateDdl(true);
 
-        LocalContainerEntityManagerFactoryBean factory= new LocalContainerEntityManagerFactoryBean();
+        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setDataSource(getDbConnection());
         factory.setJpaVendorAdapter(adapter);
         //Specifico il package dove sono contenute le classi Entity
@@ -89,22 +94,38 @@ public class Config {
 
 
     //Restituisce un oggetto che permette di compiere le transazioni
-    @Bean(name="tM")
-    public PlatformTransactionManager getTransactionManager(){
-        JpaTransactionManager jtm= new JpaTransactionManager(getEntityManager().getObject());
+    @Bean(name = "tM")
+    public PlatformTransactionManager getTransactionManager() {
+        JpaTransactionManager jtm = new JpaTransactionManager(getEntityManager().getObject());
         return jtm;
     }
 
 
+    @Bean
+    public ProdottoDao getProdottoDao() {return new ProdottoDaoImpl();}
 
     @Bean
-    public ClienteDao getClienteService(){
+    public ClienteDao getClienteDao() {
         return new ClienteDaoImpl();
     }
 
     @Bean
-    public GeneralDao<Cliente> getGeneralDaoCliente(){
+    public CategoriaDao getCategoriaDao() {
+        return new CategoriaDaoImpl();
+    }
+
+    @Bean
+    public GeneralDao<Cliente> getGeneralDaoCliente() {
         return new ClienteDaoImpl();
+    }
+    @Bean
+    public GeneralDao<Prodotto> getGeneralDaoProdotto() {
+        return new ProdottoDaoImpl();
+    }
+
+    @Bean
+    public GeneralDao<Categoria> getGeneralDaoCategoria() {
+        return new CategoriaDaoImpl();
     }
 
 }

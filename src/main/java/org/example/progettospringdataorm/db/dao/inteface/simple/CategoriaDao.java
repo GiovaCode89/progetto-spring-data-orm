@@ -2,7 +2,10 @@ package org.example.progettospringdataorm.db.dao.inteface.simple;
 
 import org.example.progettospringdataorm.db.entity.Categoria;
 
+import java.util.List;
+
 public interface CategoriaDao {
-    public Categoria retrieveForName(String nome);
+
     public String nomeById(int id);
+    public List<Categoria> selectByNome(String nome);
 }
